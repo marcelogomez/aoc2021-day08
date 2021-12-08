@@ -50,6 +50,48 @@ struct InputLine {
     pub output_values: Vec<String>,
 }
 
+impl InputLine {
+    // Returns a mapping of where each segment is mapped
+    fn decode_wirings(&self) -> BTreeMap<char, char> {
+        // TODO: implement
+        BTreeMap::new()
+    }
+
+    pub fn decode_outputs(&self) -> anyhow::Result<usize> {
+        let code = self.decode_wirings();
+
+        let decoded_outputs: Vec<String> = self
+            .output_values
+            .iter()
+            .map(|p| {
+                p.chars()
+                    .map(|c| {
+                        code.get(&c).ok_or_else(|| {
+                            anyhow::anyhow!("Failed to decode pattern {} with code {:?}", p, code)
+                        })
+                    })
+                    .collect()
+            })
+            .collect::<anyhow::Result<_>>()?;
+
+        let output_digits: Vec<usize> = decoded_outputs
+            .into_iter()
+            .map(|decoded_pattern| {
+                get_digit(&decoded_pattern)
+                    .ok_or_else(|| anyhow::anyhow!("Bad decoded pattern {}", decoded_pattern))
+            })
+            .collect::<Result<_, _>>()?;
+
+        Ok(output_digits
+            .into_iter()
+            .fold(0, |out, digit| out * 10 + digit))
+    }
+}
+
+fn get_digit(pattern: &str) -> Option<usize> {
+    PATTERN_TO_DIGIT.get(pattern).map(|d| *d)
+}
+
 fn parse_pattern(s: &str) -> String {
     s.chars().collect::<BTreeSet<_>>().into_iter().collect()
 }
