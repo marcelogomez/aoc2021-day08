@@ -68,6 +68,21 @@ struct InputLine {
  * 8 difference abcdef => g
  */
 
+ // TODO: Figure out how to make this generic?
+trait SetIteratorExt<'a>: Iterator<Item = &'a BTreeSet<char>> {
+    fn intersect_all(&mut self) -> BTreeSet<char> {
+        self.next()
+            .map(|init| {
+                self.fold(init.clone(), |acc, set| {
+                    acc.intersection(set).cloned().collect()
+                })
+            })
+            .unwrap_or_default()
+    }
+}
+
+impl<'a, T> SetIteratorExt<'a> for T where T: Iterator<Item = &'a BTreeSet<char>> {}
+
 impl InputLine {
     // Returns a mapping of where each segment is mapped
     pub fn decode_wirings(&self) -> anyhow::Result<BTreeMap<char, char>> {
@@ -81,13 +96,7 @@ impl InputLine {
         let a = *acf.difference(cf).next().unwrap();
         solution.insert(a, 'a');
 
-        let adg = self.patterns_by_count[&5].iter().fold(
-            btreeset!['a', 'b', 'c', 'd', 'e', 'f', 'g'],
-            |mut acc, p| {
-                acc = acc.intersection(p).cloned().collect();
-                acc
-            },
-        );
+        let adg = self.patterns_by_count[&5].iter().intersect_all();
         // Known pattern representing 4
         let bcdf = &self.patterns_by_count[&4][0];
         let d = *adg.intersection(bcdf).next().unwrap();
