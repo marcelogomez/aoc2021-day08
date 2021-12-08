@@ -130,15 +130,15 @@ impl InputLine {
     pub fn decode_outputs(&self) -> anyhow::Result<usize> {
         let code = self.decode_wirings()?;
 
-        let decoded_outputs: Vec<String> = self
+        let decoded_outputs: Vec<BTreeSet<char>> = self
             .output_values
             .iter()
             .map(|p| {
                 p.iter()
                     .map(|c| {
-                        code.get(&c).ok_or_else(|| {
+                        Ok(*code.get(&c).ok_or_else(|| {
                             anyhow::anyhow!("Failed to decode pattern {:?} with code {:?}", p, code)
-                        })
+                        })?)
                     })
                     .collect()
             })
@@ -147,8 +147,8 @@ impl InputLine {
         let output_digits: Vec<usize> = decoded_outputs
             .into_iter()
             .map(|decoded_pattern| {
-                get_digit(&decoded_pattern)
-                    .ok_or_else(|| anyhow::anyhow!("Bad decoded pattern {}", decoded_pattern))
+                get_digit(&decoded_pattern.iter().collect::<String>())
+                    .ok_or_else(|| anyhow::anyhow!("Bad decoded pattern {:?}", decoded_pattern))
             })
             .collect::<Result<_, _>>()?;
 
@@ -239,5 +239,7 @@ mod tests {
                 'a' => 'c',
             ],
         );
+
+        assert_eq!(parsed_line.decode_outputs().unwrap(), 5353);
     }
 }
