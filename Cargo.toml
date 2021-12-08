@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.51"
+lazy_static = "1.4.0"
+maplit = "1.0.2"
