@@ -105,6 +105,10 @@ impl InputLine {
         let g = *adg.difference(&btreeset![a, d]).next().unwrap();
         solution.insert(g, 'g');
 
+        let bd: BTreeSet<char> = bcdf.difference(cf).cloned().collect();
+        let b =  *bd.difference(&btreeset![d]).next().unwrap();
+        solution.insert(b, 'b');
+
         Ok(solution)
     }
 
@@ -214,6 +218,7 @@ mod tests {
                 'd' => 'a',
                 'f' => 'd',
                 'c' => 'g',
+                'e' => 'b',
             ],
         );
     }
