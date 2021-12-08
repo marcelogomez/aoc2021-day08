@@ -46,7 +46,7 @@ lazy_static::lazy_static! {
 
 #[derive(Debug)]
 struct InputLine {
-    pub distinct_patterns: BTreeMap<usize, Vec<BTreeSet<char>>>,
+    pub patterns_by_count: BTreeMap<usize, Vec<BTreeSet<char>>>,
     pub output_values: Vec<BTreeSet<char>>,
 }
 
@@ -118,7 +118,7 @@ fn parse_line(line: &str) -> anyhow::Result<InputLine> {
         .ok_or_else(|| anyhow::anyhow!("Malformed input {}", line))?;
 
     Ok(InputLine {
-        distinct_patterns: patterns.split(' ').map(parse_pattern).fold(
+        patterns_by_count: patterns.split(' ').map(parse_pattern).fold(
             BTreeMap::new(),
             |mut map, p| {
                 // Group patterns by length
