@@ -68,7 +68,7 @@ struct InputLine {
  * 8 difference abcdef => g
  */
 
- // TODO: Figure out how to make this generic?
+// TODO: Figure out how to make this generic?
 trait SetIteratorExt<'a>: Iterator<Item = &'a BTreeSet<char>> {
     fn intersect_all(&mut self) -> BTreeSet<char> {
         self.next()
@@ -106,8 +106,17 @@ impl InputLine {
         solution.insert(g, 'g');
 
         let bd: BTreeSet<char> = bcdf.difference(cf).cloned().collect();
-        let b =  *bd.difference(&btreeset![d]).next().unwrap();
+        let b = *bd.difference(&btreeset![d]).next().unwrap();
         solution.insert(b, 'b');
+
+        // Known pattern representing 8
+        let abcdefg = &self.patterns_by_count[&7][0];
+        let cef: BTreeSet<char> = abcdefg
+            .difference(&btreeset![a, b, d, g])
+            .cloned()
+            .collect();
+        let e = *cef.difference(cf).next().unwrap();
+        solution.insert(e, 'e');
 
         Ok(solution)
     }
@@ -219,6 +228,7 @@ mod tests {
                 'f' => 'd',
                 'c' => 'g',
                 'e' => 'b',
+                'g' => 'e',
             ],
         );
     }
