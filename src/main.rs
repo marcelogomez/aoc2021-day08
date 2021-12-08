@@ -22,16 +22,14 @@ use std::io::BufRead;
 // .    f  e    f  .    f  e    f  .    f
 //  gggg    gggg    ....    gggg    gggg
 
-type SegmentPattern = BTreeSet<char>;
-
 #[derive(Debug)]
 struct InputLine {
-    pub distinct_patterns: Vec<SegmentPattern>,
-    pub output_values: Vec<SegmentPattern>,
+    pub distinct_patterns: Vec<String>,
+    pub output_values: Vec<String>,
 }
 
-fn parse_pattern(s: &str) -> SegmentPattern {
-    s.chars().collect()
+fn parse_pattern(s: &str) -> String {
+    s.chars().collect::<BTreeSet<_>>().into_iter().collect()
 }
 
 fn parse_line(line: &str) -> anyhow::Result<InputLine> {
@@ -45,14 +43,29 @@ fn parse_line(line: &str) -> anyhow::Result<InputLine> {
     })
 }
 
+fn solve_part_1(input_lines: &[InputLine]) -> usize {
+    input_lines
+        .iter()
+        .map(|l| l.output_values.iter())
+        .flatten()
+        .filter(|p| match p.len() {
+            2 => true, // 1 uses 2 segments
+            3 => true, // 7 uses 3 segments
+            4 => true, // 4 uses 4 segments
+            7 => true, // 8 uses all 7 segments
+            _ => false,
+        })
+        .count()
+}
+
 fn main_impl() -> anyhow::Result<()> {
     let input: Vec<InputLine> = std::io::stdin()
         .lock()
         .lines()
         .map(|l| parse_line(&l?))
         .collect::<Result<_, _>>()?;
-    
-    println!("{:#?}", input);
+
+    println!("Part 1 solution {}", solve_part_1(&input));
 
     Ok(())
 }
