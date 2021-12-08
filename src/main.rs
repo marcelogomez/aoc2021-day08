@@ -70,7 +70,17 @@ struct InputLine {
 impl InputLine {
     // Returns a mapping of where each segment is mapped
     pub fn decode_wirings(&self) -> anyhow::Result<BTreeMap<char, char>> {
-        Ok(BTreeMap::new())
+        let mut solution = BTreeMap::new();
+
+        // Known patern representing 1
+        let cf = &self.patterns_by_count[&2][0];
+        // Known pattern represneting 7
+        let acf = &self.patterns_by_count[&3][0];
+
+        let a = *acf.difference(cf).next().unwrap();
+        solution.insert(a, 'a');
+
+        Ok(solution)
     }
 
     pub fn decode_outputs(&self) -> anyhow::Result<usize> {
@@ -159,4 +169,24 @@ fn main_impl() -> anyhow::Result<()> {
 
 fn main() {
     main_impl().unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use maplit::btreemap;
+
+    #[test]
+    fn test_decode() {
+        let parsed_line = parse_line(
+            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf",
+        ).unwrap();
+
+        assert_eq!(
+            parsed_line.decode_wirings().unwrap(),
+            btreemap![
+                'd' => 'a',
+            ],
+        );
+    }
 }
