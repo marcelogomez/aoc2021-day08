@@ -2,6 +2,7 @@
 // https://adventofcode.com/2021/day/8
 
 use maplit::btreemap;
+use maplit::btreeset;
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 use std::io::BufRead;
@@ -79,6 +80,18 @@ impl InputLine {
 
         let a = *acf.difference(cf).next().unwrap();
         solution.insert(a, 'a');
+
+        let adg = self.patterns_by_count[&5].iter().fold(
+            btreeset!['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+            |mut acc, p| {
+                acc = acc.intersection(p).cloned().collect();
+                acc
+            },
+        );
+        // Known pattern representing 4
+        let bcdf = &self.patterns_by_count[&4][0];
+        let d = *adg.intersection(bcdf).next().unwrap();
+        solution.insert(d, 'd');
 
         Ok(solution)
     }
@@ -180,12 +193,14 @@ mod tests {
     fn test_decode() {
         let parsed_line = parse_line(
             "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf",
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(
             parsed_line.decode_wirings().unwrap(),
             btreemap![
                 'd' => 'a',
+                'f' => 'd',
             ],
         );
     }
