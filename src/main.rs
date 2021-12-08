@@ -159,7 +159,7 @@ impl InputLine {
 }
 
 fn get_digit(pattern: &str) -> Option<usize> {
-    PATTERN_TO_DIGIT.get(pattern).map(|d| *d)
+    PATTERN_TO_DIGIT.get(pattern).copied()
 }
 
 fn parse_pattern(s: &str) -> BTreeSet<char> {
