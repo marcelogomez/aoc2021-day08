@@ -50,18 +50,6 @@ struct InputLine {
     pub output_values: Vec<String>,
 }
 
-/// Finds the only pattern withing the given set that has the specified number
-/// of digits
-fn find_unique_pattern(patterns: &[String], num_digits: usize) -> anyhow::Result<String> {
-    Ok(patterns
-        .iter()
-        .filter(|p| p.len() == num_digits)
-        .next()
-        .ok_or_else(|| anyhow::anyhow!("Unable to find pattern 3 segment pattern"))?
-        .to_string())
-}
-
-
 /**
  * TODO: There must be a shorter way
  * Known patterns: 1, 4, 7, 8
@@ -82,14 +70,7 @@ fn find_unique_pattern(patterns: &[String], num_digits: usize) -> anyhow::Result
 impl InputLine {
     // Returns a mapping of where each segment is mapped
     pub fn decode_wirings(&self) -> anyhow::Result<BTreeMap<char, char>> {
-        let mut solution = BTreeMap::new();
-
-        let one_pattern = find_unique_pattern(&self.distinct_patterns, 2)?;
-        let four_pattern = find_unique_pattern(&self.distinct_patterns, 4)?;
-        let seven_pattern = find_unique_pattern(&self.distinct_patterns, 3)?;
-        let eight_pattern = find_unique_pattern(&self.distinct_patterns, 7)?;
-
-        Ok(solution)
+        Ok(BTreeMap::new())
     }
 
     pub fn decode_outputs(&self) -> anyhow::Result<usize> {
