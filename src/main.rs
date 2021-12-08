@@ -102,6 +102,9 @@ impl InputLine {
         let d = *adg.intersection(bcdf).next().unwrap();
         solution.insert(d, 'd');
 
+        let g = *adg.difference(&btreeset![a, d]).next().unwrap();
+        solution.insert(g, 'g');
+
         Ok(solution)
     }
 
@@ -210,6 +213,7 @@ mod tests {
             btreemap![
                 'd' => 'a',
                 'f' => 'd',
+                'c' => 'g',
             ],
         );
     }
