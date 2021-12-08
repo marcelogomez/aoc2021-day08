@@ -46,8 +46,8 @@ lazy_static::lazy_static! {
 
 #[derive(Debug)]
 struct InputLine {
-    pub distinct_patterns: Vec<String>,
-    pub output_values: Vec<String>,
+    pub distinct_patterns: Vec<BTreeSet<char>>,
+    pub output_values: Vec<BTreeSet<char>>,
 }
 
 /**
@@ -80,10 +80,10 @@ impl InputLine {
             .output_values
             .iter()
             .map(|p| {
-                p.chars()
+                p.iter()
                     .map(|c| {
                         code.get(&c).ok_or_else(|| {
-                            anyhow::anyhow!("Failed to decode pattern {} with code {:?}", p, code)
+                            anyhow::anyhow!("Failed to decode pattern {:?} with code {:?}", p, code)
                         })
                     })
                     .collect()
@@ -108,8 +108,8 @@ fn get_digit(pattern: &str) -> Option<usize> {
     PATTERN_TO_DIGIT.get(pattern).map(|d| *d)
 }
 
-fn parse_pattern(s: &str) -> String {
-    s.chars().collect::<BTreeSet<_>>().into_iter().collect()
+fn parse_pattern(s: &str) -> BTreeSet<char> {
+    s.chars().collect()
 }
 
 fn parse_line(line: &str) -> anyhow::Result<InputLine> {
