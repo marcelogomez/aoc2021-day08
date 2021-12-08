@@ -84,6 +84,8 @@ impl<'a, T> SetIteratorExt<'a> for T where T: Iterator<Item = &'a BTreeSet<char>
 
 impl InputLine {
     // Returns a mapping of where each segment is mapped
+    // IMO this is a valid use of these variable names
+    #[allow(clippy::many_single_char_names)] 
     pub fn decode_wirings(&self) -> anyhow::Result<BTreeMap<char, char>> {
         let mut solution = BTreeMap::new();
 
