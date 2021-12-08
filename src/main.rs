@@ -63,6 +63,7 @@ struct InputLine {
  * 8 difference abdg => cef
  * cef difference 1 => e
  * intersect all 6 segment patterns => abfg
+ * abfg difference abg => f
  */
 
 // TODO: Figure out how to make this generic?
