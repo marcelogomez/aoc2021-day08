@@ -199,6 +199,15 @@ fn solve_part_1(input_lines: &[InputLine]) -> usize {
         .count()
 }
 
+fn solve_part_2(input_lines: &[InputLine]) -> anyhow::Result<usize> {
+    Ok(input_lines
+        .iter()
+        .map(|l| l.decode_outputs())
+        .collect::<Result<Vec<_>, _>>()?
+        .into_iter()
+        .sum())
+}
+
 fn main_impl() -> anyhow::Result<()> {
     let input: Vec<InputLine> = std::io::stdin()
         .lock()
@@ -207,6 +216,8 @@ fn main_impl() -> anyhow::Result<()> {
         .collect::<Result<_, _>>()?;
 
     println!("Part 1 solution {}", solve_part_1(&input));
+
+    println!("Part 2 solution {}", solve_part_2(&input)?);
 
     Ok(())
 }
