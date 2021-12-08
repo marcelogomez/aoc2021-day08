@@ -50,15 +50,50 @@ struct InputLine {
     pub output_values: Vec<String>,
 }
 
+/// Finds the only pattern withing the given set that has the specified number
+/// of digits
+fn find_unique_pattern(patterns: &[String], num_digits: usize) -> anyhow::Result<String> {
+    Ok(patterns
+        .iter()
+        .filter(|p| p.len() == num_digits)
+        .next()
+        .ok_or_else(|| anyhow::anyhow!("Unable to find pattern 3 segment pattern"))?
+        .to_string())
+}
+
+
+/**
+ * TODO: There must be a shorter way
+ * Known patterns: 1, 4, 7, 8
+ * 7 difference 1 => a
+ * intersect all 5 segment patterns => adg
+ * adg intersect 4 => d
+ * adg difference ad => g
+ * 4 difference 1 => bd
+ * bd difference d => b
+ * 8 difference abdg => cef
+ * cef difference 1 => e
+ * xor all 6 segment patterns => ec
+ * ec difference e => c
+ * 1 difference c => f
+ * 8 difference abcdef => g
+ */
+
 impl InputLine {
     // Returns a mapping of where each segment is mapped
-    fn decode_wirings(&self) -> BTreeMap<char, char> {
-        // TODO: implement
-        BTreeMap::new()
+    pub fn decode_wirings(&self) -> anyhow::Result<BTreeMap<char, char>> {
+        let mut solution = BTreeMap::new();
+
+        let one_pattern = find_unique_pattern(&self.distinct_patterns, 2)?;
+        let four_pattern = find_unique_pattern(&self.distinct_patterns, 4)?;
+        let seven_pattern = find_unique_pattern(&self.distinct_patterns, 3)?;
+        let eight_pattern = find_unique_pattern(&self.distinct_patterns, 7)?;
+
+        Ok(solution)
     }
 
     pub fn decode_outputs(&self) -> anyhow::Result<usize> {
-        let code = self.decode_wirings();
+        let code = self.decode_wirings()?;
 
         let decoded_outputs: Vec<String> = self
             .output_values
