@@ -189,13 +189,7 @@ fn solve_part_1(input_lines: &[InputLine]) -> usize {
         .iter()
         .map(|l| l.output_values.iter())
         .flatten()
-        .filter(|p| match p.len() {
-            2 => true, // 1 uses 2 segments
-            3 => true, // 7 uses 3 segments
-            4 => true, // 4 uses 4 segments
-            7 => true, // 8 uses all 7 segments
-            _ => false,
-        })
+        .filter(|p| matches!(p.len(), 2 | 3 | 4 | 7))
         .count()
 }
 
