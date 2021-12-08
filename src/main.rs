@@ -64,6 +64,7 @@ struct InputLine {
  * cef difference 1 => e
  * intersect all 6 segment patterns => abfg
  * abfg difference abg => f
+ * 1 difference f => c
  */
 
 // TODO: Figure out how to make this generic?
@@ -119,6 +120,9 @@ impl InputLine {
         let abfg = self.patterns_by_count[&6].iter().intersect_all();
         let f = *abfg.difference(&btreeset![a, b, g]).next().unwrap();
         solution.insert(f, 'f');
+
+        let c = *cf.difference(&btreeset![f]).next().unwrap();
+        solution.insert(c, 'c');
 
         Ok(solution)
     }
@@ -215,7 +219,6 @@ fn main() {
 mod tests {
     use super::*;
     use maplit::btreemap;
-    use maplit::btreeset;
 
     #[test]
     fn test_decode() {
@@ -233,6 +236,7 @@ mod tests {
                 'e' => 'b',
                 'g' => 'e',
                 'b' => 'f',
+                'a' => 'c',
             ],
         );
     }
