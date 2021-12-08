@@ -136,7 +136,7 @@ impl InputLine {
             .map(|p| {
                 p.iter()
                     .map(|c| {
-                        Ok(*code.get(&c).ok_or_else(|| {
+                        Ok(*code.get(c).ok_or_else(|| {
                             anyhow::anyhow!("Failed to decode pattern {:?} with code {:?}", p, code)
                         })?)
                     })
